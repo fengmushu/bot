@@ -1,0 +1,12 @@
+
+uci -q batch <<-EOF >/dev/null
+	set system.bot[0].name=iperf2
+	set system.bot[0].dev=sta0
+	set system.bot[0].threshold=100
+	set system.bot[0].refresh=60
+	set system.bot[1].name=iperf3
+	set system.bot[1].dev=sta1
+	set system.bot[1].threshold=100
+	set system.bot[1].refresh=60
+	commit system
+EOF

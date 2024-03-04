@@ -1,0 +1,42 @@
+#!/bin/sh /etc/rc.common
+# (C) 2012 Daniel Golle, Allnet GmbH <dgolle@allnet.de>
+
+START=96
+STOP=96
+BOT_BIN="/usr/sbin/bot"
+
+SERVICE_DAEMONIZE=1
+SERVICE_WRITE_PID=1
+
+start_bot() {
+	local name
+	local dev
+	local threshold
+	local refresh
+	local leds
+	config_get name $1 name
+	config_get dev $1 dev
+	config_get threshold $1 threshold
+	config_get refresh $1 refresh
+	SERVICE_PID_FILE=/var/run/bot-$dev.pid
+	service_start $BOT_BIN $dev $refresh $threshold $leds
+}
+
+stop_bot() {
+	local dev
+	config_get dev $1 dev
+	SERVICE_PID_FILE=/var/run/bot-$dev.pid
+	service_stop $BOT_BIN
+}
+
+start() {
+	[ -e /sys/class/leds/ ] && [ -x "$BOT_BIN" ] && {
+		config_load system
+		config_foreach start_bot bot
+	}
+}
+
+stop() {
+	config_load system
+	config_foreach stop_bot bot
+}
