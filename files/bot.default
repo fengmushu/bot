@@ -1,12 +1,17 @@
 
 uci -q batch <<-EOF >/dev/null
-	set system.bot[0].name=iperf2
-	set system.bot[0].dev=sta0
-	set system.bot[0].threshold=100
-	set system.bot[0].refresh=60
-	set system.bot[1].name=iperf3
-	set system.bot[1].dev=sta1
-	set system.bot[1].threshold=100
-	set system.bot[1].refresh=60
+	add system bot
+	set system.@bot[-1].name=iperf-2g
+	set system.@bot[-1].dev=sta0
+	set system.@bot[-1].network=wwan0
+	set system.@bot[-1].ratelimit=100
+	set system.@bot[-1].is_tcp=1
+
+	add system bot
+	set system.@bot[-1].name=iperf-5g
+	set system.@bot[-1].dev=sta1
+	set system.@bot[-1].network=wwan1
+	set system.@bot[-1].ratelimit=100
+	set system.@bot[-1].is_tcp=1
 	commit system
 EOF
